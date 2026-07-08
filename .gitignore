@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Environment (mantém os .env.example versionados)
+.env
+.env.*
+!.env.example
+
+# Docker artifacts
+*.pid
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# E2E reports
+playwright-report/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Material de referência do desafio (não faz parte da entrega)
+challenge/
