@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brev.ly — Meus links</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="mock-note">
+    Mockup — Página raiz <code>/</code>. Estado principal: <strong>com links</strong>.
+    Variações (empty state, loading, erro de validação) estão comentadas neste HTML e descritas em <code>SECOES.md</code>.
+  </div>
+
+  <main class="home-wrap">
+    <!-- ===================== LOGO ===================== -->
+    <a class="brand" href="#" aria-label="brev.ly">
+      <img class="logo-img" src="../assets/brev.ly-logo.png" alt="brev.ly" />
+    </a>
+
+    <div class="home-grid">
+
+      <!-- ============================================================
+           SEÇÃO 1 — FORMULÁRIO "Novo link"
+           ============================================================ -->
+      <section class="card" aria-label="Novo link">
+        <h2 class="text-lg form-title">Novo link</h2>
+
+        <!-- Campo: LINK ORIGINAL -->
+        <div class="field">
+          <label class="text-xs" for="original">Link original</label>
+          <div class="single-input">
+            <input id="original" type="text" placeholder="www.exemplo.com.br" value="https://www.rocketseat.com.br/challenges" />
+          </div>
+        </div>
+
+        <!-- Campo: LINK ENCURTADO (prefixo brev.ly/) -->
+        <div class="field">
+          <label class="text-xs" for="short">Link encurtado</label>
+          <div class="prefix-input">
+            <span class="prefix">brev.ly/</span>
+            <input id="short" type="text" placeholder="" value="rocketseat-challenge" />
+          </div>
+        </div>
+
+        <!--
+          VARIAÇÃO — estado de erro (URL mal formatada / já existente):
+          <div class="field error">
+            <label class="text-xs">Link encurtado</label>
+            <div class="prefix-input"><span class="prefix">brev.ly/</span><input value="link inválido"/></div>
+            <span class="error-msg text-sm">⚠ Informe uma url minúscula e sem espaço/caractere especial.</span>
+          </div>
+        -->
+
+        <div class="form-actions">
+          <button class="btn btn-primary">Salvar link</button>
+          <!-- Estado enviando: <button class="btn btn-primary" disabled>Salvando…</button> -->
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SEÇÃO 2 — CARD "Meus links"
+           ============================================================ -->
+      <section class="card" aria-label="Meus links">
+        <!-- Sub-seção 2.1 — Cabeçalho + Baixar CSV -->
+        <div class="links-head">
+          <h2 class="text-lg">Meus links</h2>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Baixar CSV
+          </button>
+        </div>
+        <hr class="links-divider" />
+
+        <!-- Sub-seção 2.2 — Lista de links -->
+        <div class="links-list">
+
+          <div class="link-row">
+            <div class="link-info">
+              <a class="short" href="#">brev.ly/portfolio-dev</a>
+              <span class="original">https://portfolio.sergiomacedo.dev/projetos/2026</span>
+            </div>
+            <div class="link-actions">
+              <span class="count">248 acessos</span>
+              <div class="buttons">
+                <button class="icon-btn" title="Copiar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                </button>
+                <button class="icon-btn" title="Deletar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="link-row">
+            <div class="link-info">
+              <a class="short" href="#">brev.ly/rocketseat-challenge</a>
+              <span class="original">https://www.rocketseat.com.br/challenges/brev-ly</span>
+            </div>
+            <div class="link-actions">
+              <span class="count">57 acessos</span>
+              <div class="buttons">
+                <button class="icon-btn" title="Copiar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                </button>
+                <button class="icon-btn" title="Deletar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="link-row">
+            <div class="link-info">
+              <a class="short" href="#">brev.ly/linkedin</a>
+              <span class="original">https://www.linkedin.com/in/sergio-silva-macedo</span>
+            </div>
+            <div class="link-actions">
+              <span class="count">1.204 acessos</span>
+              <div class="buttons">
+                <button class="icon-btn" title="Copiar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                </button>
+                <button class="icon-btn" title="Deletar link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!--
+          VARIAÇÃO — EMPTY STATE (nenhum link cadastrado):
+          <div class="empty">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span class="text-xs">Ainda não existem links cadastrados</span>
+          </div>
+
+          VARIAÇÃO — LOADING (carregando lista):
+          <div class="loading"><span class="spinner"></span><span class="text-sm">Carregando links…</span></div>
+        -->
+      </section>
+
+    </div>
+  </main>
+</body>
+</html>

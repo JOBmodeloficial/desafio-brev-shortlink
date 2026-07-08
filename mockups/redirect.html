@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brev.ly — Redirecionando</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style> body { background: var(--bg); } </style>
+</head>
+<body>
+  <div class="mock-note">
+    Mockup — Página de redirecionamento <code>/:url-encurtada</code>.
+    Busca a URL original na API e redireciona automaticamente. Detalhes em <code>SECOES.md</code>.
+  </div>
+
+  <main class="center-wrap">
+    <!-- SEÇÃO 1 — Card de redirecionamento -->
+    <section class="center-card">
+      <!-- Sub-seção 1.1 — Marca / ilustração -->
+      <div class="illustration">
+        <img class="logo-icon" src="../assets/brev.ly-logo-alone.png" alt="brev.ly" />
+      </div>
+
+      <!-- Sub-seção 1.2 — Título + spinner -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="spinner"></span>
+        <h1>Redirecionando...</h1>
+      </div>
+
+      <!-- Sub-seção 1.3 — Mensagem -->
+      <p>
+        O link será aberto automaticamente em alguns instantes.<br />
+        Não foi redirecionado?
+        <a class="link-blue" href="#">Acesse aqui</a>.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
