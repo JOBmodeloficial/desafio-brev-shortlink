@@ -38,6 +38,16 @@ export const listLinksQuerySchema = z.object({
 export type CreateLinkInput = z.infer<typeof createLinkSchema>;
 export type ListLinksQuery = z.infer<typeof listLinksQuerySchema>;
 
+/** Param da rota de resolve: apenas não-vazio (slug inexistente -> 404, não 400). */
+export const shortUrlParamSchema = z.object({
+  shortUrl: z.string().min(1),
+});
+
+/** Param da rota de delete: precisa ser UUID (D1). id inválido -> 400. */
+export const idParamSchema = z.object({
+  id: z.string().uuid('Identificador inválido.'),
+});
+
 /** DTO de saída em camelCase (createdAt em ISO-8601). */
 export interface LinkDTO {
   id: string;
