@@ -1,163 +1,120 @@
 # Brev.ly
 
-Encurtador de URL — monorepo com dois pacotes npm independentes: `web/` (SPA React + Vite) e
-`server/` (API Fastify + Drizzle + Postgres).
+Encurtador de URL full-stack — desafio prático da Rocketseat (Frontend + Backend + DevOps).
 
-> Este README cobre **apenas a fundação** (setup + verificação): pré-requisitos, variáveis de
-> ambiente, banco, migrations, rodar em dev e conferir que tudo sobe. As features de negócio e o
-> contrato de API serão documentados nas ondas seguintes — veja
-> [`WAVES.md`](./WAVES.md), [`PRD.md`](./PRD.md) e [`constitution.md`](./constitution.md).
+Monorepo com dois pacotes npm independentes (**sem workspaces**) e uma suíte E2E:
+
+- **`web/`** — SPA em React + Vite + TypeScript (Tailwind, React Query, React Hook Form, Zod).
+- **`server/`** — API em Fastify + Drizzle + Postgres + TypeScript (upload de CSV para Cloudflare R2).
+- **`e2e/`** — testes end-to-end com Playwright (desktop + mobile).
+
+Documentos de projeto: [`PRD.md`](./PRD.md) · [`constitution.md`](./constitution.md) · [`WAVES.md`](./WAVES.md) · [`ACEITE.md`](./ACEITE.md).
 
 ---
 
-## Estrutura do projeto
+## Funcionalidades
 
-`web/` e `server/` são **pacotes npm independentes** — **não há workspaces** (Turborepo, Nx,
-Lerna ou workspaces de gerenciador). Cada subprojeto se instala e roda **dentro da sua própria
-pasta**.
+- Criar link (slug informado ou gerado automaticamente), rejeitando URL mal formatada ou slug duplicado.
+- Listar, deletar e resolver links; o acesso incrementa o contador ao abrir a URL encurtada.
+- Exportar os links em **CSV** (streaming do Postgres) hospedado em **CDN** (Cloudflare R2), com nome único.
+- SPA responsiva (mobile-first) com 3 páginas: home (`/`), redirecionamento (`/:url-encurtada`) e 404.
+
+---
+
+## Estrutura
 
 ```
 desafio-brev-shortlink/
-├── README.md              # este arquivo (setup + verificação da fundação)
-├── .nvmrc                 # versão do Node (22)
-├── server/                # API Fastify + TS
-│   ├── package.json       # scripts: dev, build, db:migrate, ...
-│   ├── docker-compose.yml # serviço "db" (Postgres) para desenvolvimento
-│   └── .env.example       # template de variáveis do backend
-└── web/                   # SPA React + Vite + TS
-    ├── package.json       # scripts: dev, build, ...
-    └── .env.example       # template de variáveis do frontend
+├── server/   API Fastify + Drizzle + Postgres (+ Dockerfile, docker-compose)
+├── web/      SPA React + Vite + Tailwind (tema Dracula)
+├── e2e/      Playwright (7 jornadas × desktop/mobile)
+├── PRD.md · constitution.md · WAVES.md · ACEITE.md
+└── mockups/ · assets/
 ```
 
 ---
 
 ## Pré-requisitos
 
-- **Node 22** — a versão está fixada em [`.nvmrc`](./.nvmrc). Com um gerenciador de versões:
+- **Node 22** (fixado em [`.nvmrc`](./.nvmrc); `nvm use` / `fnm use`).
+- **Docker** + **Docker Compose v2** (`docker compose`) para o Postgres.
 
-  ```bash
-  node -v      # deve reportar v22.x
-  nvm use      # ou: fnm use  (lê a versão do .nvmrc)
-  ```
-
-- **Docker** com **Docker Compose v2** (comando `docker compose`, sem hífen) — usado apenas para
-  subir o Postgres de desenvolvimento.
-
-  ```bash
-  docker --version
-  docker compose version
-  ```
-
----
-
-## Configuração inicial
-
-### 1. Instalar dependências (por pasta)
-
-Sem workspaces: instale em cada subprojeto separadamente.
+## Setup
 
 ```bash
+# 1. Dependências (por pasta — sem workspaces)
 cd server && npm install
 cd ../web && npm install
+
+# 2. Variáveis de ambiente (copie os templates)
+cp server/.env.example server/.env   # PowerShell: Copy-Item server/.env.example server/.env
+cp web/.env.example web/.env          # e preencha VITE_BACKEND_URL / VITE_FRONTEND_URL
 ```
 
-### 2. Copiar os templates de ambiente
-
-Crie o `.env` de cada pasta a partir do respectivo `.env.example`.
-
-**POSIX (Linux/macOS):**
-
-```bash
-cp server/.env.example server/.env
-cp web/.env.example web/.env
-```
-
-**Windows (PowerShell):**
-
-```powershell
-Copy-Item server/.env.example server/.env
-Copy-Item web/.env.example web/.env
-```
-
-> Os `.env.example` já trazem **placeholders de desenvolvimento** — nenhum segredo real. As
-> chaves `CLOUDFLARE_*` do backend são opcionais nesta fase e podem ficar vazias.
-
----
-
-## Subir o banco (Postgres)
-
-A partir de `server/`, suba o serviço `db` (`postgres:16-alpine`) definido em
-`server/docker-compose.yml`:
-
-```bash
-cd server
-docker compose up -d      # serviço "db": postgres:16-alpine em localhost:5432
-docker compose ps         # aguarde o status "healthy" antes de seguir
-```
-
-> **Credenciais de dev** (padrão do `docker-compose.yml` e do `.env.example`):
-> usuário `brevly` · senha `brevly` · banco `brevly` · `localhost:5432`
->
-> `DATABASE_URL=postgresql://brevly:brevly@localhost:5432/brevly`
-
----
-
-## Rodar as migrations
-
-Depois que o Postgres estiver **healthy** e o `server/.env` estiver configurado, aplique as
-migrations a partir de `server/`:
-
-```bash
-cd server
-npm run db:migrate
-```
-
----
+Credenciais de dev (padrão do compose/`.env.example`): `brevly:brevly@localhost:5432/brevly`.
 
 ## Rodar em desenvolvimento
 
-**Backend** — dentro de `server/`:
-
 ```bash
-npm run dev
+# Banco
+cd server && docker compose up -d      # Postgres (aguarde "healthy")
+npm run db:migrate                     # aplica as migrations
+
+# Backend  (server/)
+npm run dev                            # http://localhost:3333  (GET /health → 200)
+
+# Frontend (web/, em outro terminal)
+npm run dev                            # http://localhost:5173
 ```
 
-Verifique a rota de saúde:
-
-```bash
-curl http://localhost:3333/health     # → 200 {"status":"ok"}
-```
-
-**Frontend** — dentro de `web/` (em outro terminal):
-
-```bash
-npm run dev
-```
-
-Abra **http://localhost:5173** no navegador (Vite). O app serve 3 rotas placeholder: `/`,
-`/:shortUrl` e o catch-all de página não encontrada.
+No `web/.env`, use `VITE_BACKEND_URL=http://localhost:3333` e `VITE_FRONTEND_URL=http://localhost:5173`.
 
 ---
 
-## Verificação da fundação
+## Contrato de API
 
-Smoke check — a Onda 0 está de pé quando **todos** os itens abaixo passam:
+| Método | Rota | Descrição | Sucesso | Erros |
+|--------|------|-----------|---------|-------|
+| `POST` | `/links` | Cria link (`originalUrl`, `shortUrl?`) | `201` | `400` · `409` |
+| `GET` | `/links?page=&pageSize=` | Lista paginada (`created_at desc`, `total`) | `200` | — |
+| `GET` | `/links/:shortUrl` | Resolve a URL original **e incrementa o acesso** | `200` | `404` |
+| `DELETE` | `/links/:id` | Deleta pelo `id` (UUID) | `204` | `404` |
+| `POST` | `/links/exports` | Gera o CSV, envia ao R2 e retorna `{ url }` | `200` | — |
 
-- [ ] `cd server && npm install` e `cd web && npm install` concluem sem erro.
-- [ ] `docker compose up -d` (em `server/`) sobe o serviço `db` e `docker compose ps` mostra
-      **healthy** (Postgres aceitando conexão em `localhost:5432`).
-- [ ] `npm run db:migrate` (em `server/`) conclui sem erro.
-- [ ] `npm run dev` (em `server/`) sobe a API e `GET http://localhost:3333/health` responde
-      **200** com `{"status":"ok"}`.
-- [ ] `npm run dev` (em `web/`) serve o app em **http://localhost:5173** e as **3 rotas
-      placeholder** carregam.
+Detalhes de payload em [`PRD.md`](./PRD.md#8-contrato-de-api).
 
 ---
 
-## Fora de escopo (nesta fase)
+## Testes
 
-As **features de negócio** (criar/listar/deletar/resolver link, export CSV) e o **contrato de
-API** ainda não existem — serão entregues e documentados nas Ondas 1–5. Consulte
-[`PRD.md`](./PRD.md) (§8), [`constitution.md`](./constitution.md) e [`WAVES.md`](./WAVES.md) para
-o roadmap.
-</content>
+```bash
+# Backend — Vitest + Postgres (suba o compose antes)
+cd server && npm run test:coverage     # gate: linhas ≥85% / branches ≥80%
+
+# Frontend — Vitest + Testing Library + MSW
+cd web && npm run test:coverage        # gate: features/links linhas ≥80% / branches ≥75%
+
+# E2E — Playwright (7 jornadas × desktop/mobile)
+cd server && docker compose up -d && npm run db:migrate   # Postgres pronto
+cd ../e2e && npm install && npm run e2e:install           # Chromium (1ª vez)
+npm run e2e                                               # sobe server (stub R2) + web e roda 20 testes
+```
+
+O E2E usa `STORAGE_DRIVER=stub` no backend para a jornada de CSV não depender do R2 real.
+
+---
+
+## DevOps
+
+- **Dockerfile** multi-stage (`node:22-alpine`, usuário não-root) gera a imagem do backend:
+
+  ```bash
+  cd server && docker build -t brevly-server .
+  ```
+
+- Variáveis do backend (`server/.env.example`): `PORT`, `DATABASE_URL`, `CLOUDFLARE_ACCOUNT_ID`,
+  `CLOUDFLARE_ACCESS_KEY_ID`, `CLOUDFLARE_SECRET_ACCESS_KEY`, `CLOUDFLARE_BUCKET`, `CLOUDFLARE_PUBLIC_URL`.
+  Opcional: `STORAGE_DRIVER` (`r2` padrão | `stub`).
+- Variáveis do frontend (`web/.env.example`): `VITE_FRONTEND_URL`, `VITE_BACKEND_URL`.
+
+Detalhes por pacote em [`server/README.md`](./server/README.md) e [`web/README.md`](./web/README.md).
