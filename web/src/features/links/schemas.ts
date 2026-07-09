@@ -1,7 +1,44 @@
-/**
- * Stub dos schemas Zod do domínio de links.
- *
- * As regras reais (URL http/https — D13; slug — D8) são implementadas em W4-T8 / W5-T1.
- * Nesta onda não há validação ativa; apenas o ponto de extensão existe.
- */
-export {};
+import { z } from 'zod';
+
+/** URL de origem: URL válida e http/https (D13) — mesma regra do backend. */
+export const originalUrlSchema = z
+  .string()
+  .trim()
+  .url('Informe uma URL válida.')
+  .refine((value) => /^https?:\/\//i.test(value), {
+    message: 'A URL deve começar com http:// ou https://.',
+  });
+
+/** Slug: minúsculas, dígitos e hífens (D8). */
+export const shortUrlSchema = z
+  .string()
+  .trim()
+  .regex(/^[a-z0-9-]+$/, 'Use apenas letras minúsculas, números e hífens.');
+
+/** Form de criação: shortUrl opcional (vazio => undefined; gerado pelo backend — D8). */
+export const createLinkSchema = z.object({
+  originalUrl: originalUrlSchema,
+  shortUrl: z.preprocess(
+    (value) => (value === '' || value == null ? undefined : value),
+    shortUrlSchema.optional(),
+  ),
+});
+
+export type CreateLinkInput = z.infer<typeof createLinkSchema>;
+
+/** Item de link retornado pela API (PRD §8.1). */
+export interface LinkItem {
+  id: string;
+  originalUrl: string;
+  shortUrl: string;
+  accessCount: number;
+  createdAt: string;
+}
+
+/** Envelope da listagem paginada. */
+export interface LinkListResponse {
+  links: LinkItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
