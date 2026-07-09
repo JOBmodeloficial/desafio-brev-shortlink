@@ -69,8 +69,19 @@ function getClient(config: R2Config): S3Client {
  * Usa multipart (lib-storage) para suportar streams de tamanho desconhecido (D6).
  */
 export async function uploadCsv(body: Readable | Buffer): Promise<string> {
-  const config = getR2Config();
   const key = buildCsvKey();
+
+  // Modo stub (E2E/dev): não sobe ao R2; consome o stream e devolve uma URL fake.
+  if (env.STORAGE_DRIVER === 'stub') {
+    if (typeof (body as Readable)[Symbol.asyncIterator] === 'function') {
+      for await (const _chunk of body as Readable) {
+        void _chunk;
+      }
+    }
+    return `https://cdn.stub.local/${key}`;
+  }
+
+  const config = getR2Config();
 
   const upload = new Upload({
     client: getClient(config),

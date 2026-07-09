@@ -5,6 +5,8 @@ import { z } from 'zod';
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.string().url(),
+  // Driver de storage: 'r2' (produção) ou 'stub' (E2E/dev sem credenciais).
+  STORAGE_DRIVER: z.enum(['r2', 'stub']).default('r2'),
   // Cloudflare R2 (S3-compatible) — opcionais no scaffold (Onda 3 evolui a validação estrita).
   CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
   CLOUDFLARE_ACCESS_KEY_ID: z.string().optional(),
