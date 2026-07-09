@@ -6,7 +6,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
-      include: ['src/use-cases/**', 'src/http/routes/**'],
+      include: ['src/use-cases/**', 'src/http/routes/**', 'src/http/errors/**', 'src/schemas/**'],
     },
   },
 });
