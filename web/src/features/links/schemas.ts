@@ -26,6 +26,17 @@ export const createLinkSchema = z.object({
 
 export type CreateLinkInput = z.infer<typeof createLinkSchema>;
 
+/**
+ * Schema do formulário (RHF): valores sempre string. shortUrl aceita '' (vazio),
+ * convertido para undefined no submit antes de chamar a API.
+ */
+export const linkFormSchema = z.object({
+  originalUrl: originalUrlSchema,
+  shortUrl: z.union([shortUrlSchema, z.literal('')]),
+});
+
+export type LinkFormValues = z.infer<typeof linkFormSchema>;
+
 /** Item de link retornado pela API (PRD §8.1). */
 export interface LinkItem {
   id: string;
