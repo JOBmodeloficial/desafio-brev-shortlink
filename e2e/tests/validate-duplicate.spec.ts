@@ -7,9 +7,10 @@ test.describe('Jornada 2 — Validação e duplicado', () => {
     await home.goto();
 
     await home.originalInput().fill('nao-eh-url');
-    await home.saveButton().click();
 
+    // Validação onChange: o erro aparece ao digitar e o submit fica desabilitado.
     await expect(page.getByText(/URL válida/i)).toBeVisible();
+    await expect(home.saveButton()).toBeDisabled();
   });
 
   test('bloqueia slug duplicado (409)', async ({ page }) => {

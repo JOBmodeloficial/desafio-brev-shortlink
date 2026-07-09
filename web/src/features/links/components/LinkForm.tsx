@@ -14,9 +14,10 @@ export function LinkForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LinkFormValues>({
     resolver: zodResolver(linkFormSchema),
+    mode: 'onChange',
     defaultValues: { originalUrl: '', shortUrl: '' },
   });
 
@@ -62,7 +63,12 @@ export function LinkForm() {
         {...register('shortUrl')}
       />
 
-      <Button type="submit" fullWidth loading={createLink.isPending}>
+      <Button
+        type="submit"
+        fullWidth
+        loading={createLink.isPending}
+        disabled={!isValid || createLink.isPending}
+      >
         Salvar link
       </Button>
     </form>

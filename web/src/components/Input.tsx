@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
       <div
         className={cn(
-          'flex h-12 items-center rounded border bg-surface-2 px-4 focus-within:border-purple',
+          'flex h-12 items-center rounded border bg-white px-4 focus-within:border-purple',
           error ? 'border-red' : 'border-border',
         )}
       >

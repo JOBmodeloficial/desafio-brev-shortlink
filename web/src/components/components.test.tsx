@@ -75,7 +75,7 @@ describe('Logo', () => {
     );
     expect(screen.getByRole('img', { name: 'brev.ly' })).toHaveAttribute(
       'src',
-      '/brev.ly-logo-alone.png',
+      '/brev.ly-icon.svg',
     );
   });
 });

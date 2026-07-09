@@ -16,7 +16,7 @@ const base =
   'inline-flex items-center justify-center gap-2 rounded font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants: Record<Variant, string> = {
-  primary: 'h-12 bg-purple text-bg text-md hover:bg-purple-soft',
+  primary: 'h-12 bg-purple text-white text-md hover:bg-purple-soft disabled:hover:bg-purple',
   secondary:
     'h-8 px-3 border border-transparent bg-surface-2 text-subtle text-sm hover:border-purple hover:text-fg',
 };

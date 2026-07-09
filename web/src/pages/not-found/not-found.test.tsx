@@ -8,6 +8,6 @@ describe('NotFoundPage', () => {
   it('renderiza o título 404 e a mensagem', () => {
     renderWithProviders(<NotFoundPage />);
     expect(screen.getByText('Link não encontrado')).toBeInTheDocument();
-    expect(screen.getByText('404')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: '404' })).toBeInTheDocument();
   });
 });

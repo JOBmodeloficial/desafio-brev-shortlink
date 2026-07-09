@@ -7,13 +7,20 @@ interface LogoProps {
   className?: string;
 }
 
-/** Logo oficial brev.ly, clicável (volta para `/`). */
+/** Logo oficial brev.ly (ícone azul + wordmark), clicável (volta para `/`). */
 export function Logo({ variant = 'full', className }: LogoProps) {
-  const src = variant === 'icon' ? '/brev.ly-logo-alone.png' : '/brev.ly-logo.png';
-
   return (
-    <Link to="/" aria-label="brev.ly" className="inline-flex">
-      <img src={src} alt="brev.ly" className={cn(variant === 'icon' ? 'h-16' : 'h-6', className)} />
+    <Link to="/" aria-label="brev.ly" className="inline-flex items-center gap-2">
+      <img
+        src="/brev.ly-icon.svg"
+        alt="brev.ly"
+        className={cn(variant === 'icon' ? 'h-12 w-auto' : 'h-6 w-auto', className)}
+      />
+      {variant === 'full' && (
+        <span aria-hidden className="text-lg font-bold leading-none text-purple">
+          brev.ly
+        </span>
+      )}
     </Link>
   );
 }

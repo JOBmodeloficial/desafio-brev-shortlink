@@ -25,7 +25,9 @@ describe('LinkForm', () => {
 
     await user.type(screen.getByLabelText('Link original'), 'https://exemplo.com');
     await user.type(screen.getByLabelText('Link encurtado'), 'meu-link');
-    await user.click(screen.getByRole('button', { name: 'Salvar link' }));
+    const save = screen.getByRole('button', { name: 'Salvar link' });
+    await waitFor(() => expect(save).toBeEnabled());
+    await user.click(save);
 
     await waitFor(() => expect(screen.getByLabelText('Link original')).toHaveValue(''));
   });
@@ -35,9 +37,10 @@ describe('LinkForm', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText('Link original'), 'nao-eh-url');
-    await user.click(screen.getByRole('button', { name: 'Salvar link' }));
 
+    // Com validação onChange, o erro aparece ao digitar e o submit fica desabilitado.
     expect(await screen.findByText(/URL válida/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Salvar link' })).toBeDisabled();
   });
 
   it('exibe erro de conflito quando a API responde 409 (FE-03)', async () => {
@@ -49,7 +52,9 @@ describe('LinkForm', () => {
 
     await user.type(screen.getByLabelText('Link original'), 'https://exemplo.com');
     await user.type(screen.getByLabelText('Link encurtado'), 'existente');
-    await user.click(screen.getByRole('button', { name: 'Salvar link' }));
+    const save = screen.getByRole('button', { name: 'Salvar link' });
+    await waitFor(() => expect(save).toBeEnabled());
+    await user.click(save);
 
     expect(await screen.findByText('Essa URL encurtada já existe.')).toBeInTheDocument();
   });
