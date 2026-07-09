@@ -16,8 +16,8 @@ export const shortUrlSchema = z
   .string()
   .trim()
   .regex(
-    /^[a-z0-9-]+$/,
-    'Use apenas letras minúsculas, números e hífens (sem espaços ou caracteres especiais).',
+    /^[a-zA-Z0-9-]+$/,
+    'Use apenas letras, números e hífens (sem espaços ou caracteres especiais).',
   );
 
 /** Body de criação: originalUrl obrigatória; shortUrl opcional (gerada se ausente/vazia — D8). */

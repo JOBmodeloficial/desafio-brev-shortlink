@@ -37,13 +37,21 @@ describe('createLinkSchema', () => {
     expect(result.shortUrl).toBeUndefined();
   });
 
-  it.each(['Maiuscula', 'com espaco', 'under_score', 'acento-á', 'símbolo!'])(
+  it.each(['com espaco', 'under_score', 'acento-á', 'símbolo!'])(
     'rejeita slug inválido: %s',
     (slug) => {
       const result = createLinkSchema.safeParse({ originalUrl: 'https://x.com', shortUrl: slug });
       expect(result.success).toBe(false);
     },
   );
+
+  it('aceita slug com maiúsculas', () => {
+    const result = createLinkSchema.parse({
+      originalUrl: 'https://x.com',
+      shortUrl: 'Portfolio-Dev',
+    });
+    expect(result.shortUrl).toBe('Portfolio-Dev');
+  });
 });
 
 describe('listLinksQuerySchema', () => {

@@ -13,7 +13,7 @@ export const originalUrlSchema = z
 export const shortUrlSchema = z
   .string()
   .trim()
-  .regex(/^[a-z0-9-]+$/, 'Use apenas letras minúsculas, números e hífens.');
+  .regex(/^[a-zA-Z0-9-]+$/, 'Use apenas letras, números e hífens.');
 
 /** Form de criação: shortUrl opcional (vazio => undefined; gerado pelo backend — D8). */
 export const createLinkSchema = z.object({

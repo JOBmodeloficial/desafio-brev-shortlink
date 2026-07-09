@@ -33,12 +33,16 @@ describe('createLinkSchema', () => {
     expect(createLinkSchema.parse({ originalUrl: 'https://x.com' }).shortUrl).toBeUndefined();
   });
 
-  it.each(['Maiuscula', 'com espaco', 'under_score', 'acento-á'])(
-    'rejeita slug inválido: %s',
-    (slug) => {
-      expect(
-        createLinkSchema.safeParse({ originalUrl: 'https://x.com', shortUrl: slug }).success,
-      ).toBe(false);
-    },
-  );
+  it.each(['com espaco', 'under_score', 'acento-á'])('rejeita slug inválido: %s', (slug) => {
+    expect(
+      createLinkSchema.safeParse({ originalUrl: 'https://x.com', shortUrl: slug }).success,
+    ).toBe(false);
+  });
+
+  it('aceita slug com maiúsculas', () => {
+    expect(
+      createLinkSchema.safeParse({ originalUrl: 'https://x.com', shortUrl: 'Portfolio-Dev' })
+        .success,
+    ).toBe(true);
+  });
 });
